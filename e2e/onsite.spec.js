@@ -86,7 +86,7 @@ test.describe('現場到着（位置情報）とQR点検', () => {
       // 管理画面で確認
       const adminCtx = await browser.newContext({ ...devices['Desktop Chrome'], locale: 'ja-JP', timezoneId: 'Asia/Tokyo', baseURL: 'http://localhost:3100' });
       const adminPage = await adminCtx.newPage();
-      await loginUi(adminPage, 'admin', 'admin1234');
+      await loginUi(adminPage, 'admin', 'Ichinohe-Admin-2026');
       await expect(adminPage.locator('#alerts')).toContainText(`${sc.customerName}：要確認項目あり（ブロワ稼働=異音あり）`);
       await adminPage.getByRole('link', { name: '作業報告' }).click();
       await adminPage.getByRole('row').filter({ hasText: sc.customerName }).click();

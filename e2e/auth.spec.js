@@ -9,7 +9,7 @@ test.describe('ログインと権限', () => {
   });
 
   test('作業員でログイン → 作業員画面へ移動し、管理画面URLを直打ちしても作業員画面に戻される', async ({ page }) => {
-    await loginUi(page, 'sato', 'sato1234');
+    await loginUi(page, 'sato', 'Ichinohe-Sato-2026');
     await expect(page).toHaveURL(/\/staff$/);
     await expect(page.getByRole('heading', { name: '佐藤 一郎 さん' })).toBeVisible();
     await page.goto('/admin');
@@ -19,7 +19,7 @@ test.describe('ログインと権限', () => {
   test('作業員は管理APIと他人の作業にアクセスできず、未ログインはAPIが401になる', async ({ page, request }) => {
     const api = await adminApi();
     const other = await createScenario(api);
-    await loginUi(page, 'sato', 'sato1234');
+    await loginUi(page, 'sato', 'Ichinohe-Sato-2026');
     await expect(page).toHaveURL(/\/staff$/);
     expect((await page.request.get('/api/admin/dashboard')).status()).toBe(403);
     expect((await page.request.post('/api/admin/users', { data: { login_id: 'hacker', name: 'x', password: 'password123' } })).status()).toBe(403);

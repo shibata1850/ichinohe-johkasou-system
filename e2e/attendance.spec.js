@@ -11,7 +11,7 @@ test.describe('アルコールチェック付き出退勤', () => {
     // 管理者：検知器シミュレーターから測定結果を送る
     const adminCtx = await browser.newContext({ ...devices['Desktop Chrome'], locale: 'ja-JP' });
     const adminPage = await adminCtx.newPage();
-    await loginUi(adminPage, 'admin', 'admin1234');
+    await loginUi(adminPage, 'admin', 'Ichinohe-Admin-2026');
     await adminPage.getByRole('link', { name: '設定' }).click();
     await adminPage.getByLabel('従業員').selectOption(sc.login);
     await adminPage.getByLabel('測定値（mg/L）').fill('0.00');
@@ -51,7 +51,7 @@ test.describe('アルコールチェック付き出退勤', () => {
 
     const adminCtx = await browser.newContext({ ...devices['Desktop Chrome'], locale: 'ja-JP' });
     const adminPage = await adminCtx.newPage();
-    await loginUi(adminPage, 'admin', 'admin1234');
+    await loginUi(adminPage, 'admin', 'Ichinohe-Admin-2026');
     await expect(adminPage.getByRole('heading', { name: 'ダッシュボード' })).toBeVisible();
     // 従業員表の行（「軌跡」ボタンがある行）
     const row = adminPage.getByRole('row').filter({ hasText: `テスト作業員${sc.login.slice(3)}` }).filter({ has: adminPage.getByRole('button', { name: '軌跡' }) });

@@ -2,7 +2,7 @@
 
 浄化槽の保守点検・清掃の現場作業を、スマートフォンのブラウザだけで管理するWebシステムです。アプリのインストールは不要です。
 
-**デモ**：https://ichinohe-johkasou-system.vercel.app （管理者 `admin` / `admin1234`、作業員 `sato` / `sato1234`。データは一定時間で初期化されます）
+**デモ**：https://ichinohe-johkasou-system.vercel.app （管理者 `admin` / `Ichinohe-Admin-2026`、作業員 `sato` / `Ichinohe-Sato-2026`。データは一定時間で初期化されます）
 
 | ご要望 | このシステムでの実現方法 |
 |---|---|
@@ -55,9 +55,9 @@ npm start
 
 | 権限 | ログインID | パスワード |
 |---|---|---|
-| 管理者 | admin | admin1234 |
-| 作業員 | sato | sato1234 |
-| 作業員 | takahashi | takahashi1234 |
+| 管理者 | admin | Ichinohe-Admin-2026 |
+| 作業員 | sato | Ichinohe-Sato-2026 |
+| 作業員 | takahashi | Ichinohe-Takahashi-2026 |
 
 デモデータを入れずに起動すると、初期管理者 `admin` が自動で作られ、パスワードがコンソールに表示されます（`ADMIN_PASSWORD` 環境変数で指定も可）。
 

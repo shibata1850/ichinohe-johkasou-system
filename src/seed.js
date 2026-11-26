@@ -30,9 +30,9 @@ function seedDemo() {
     }
     db.exec("DELETE FROM sqlite_sequence");
     const addUser = db.prepare('INSERT INTO users(login_id, name, role, phone, password_hash) VALUES (?,?,?,?,?)');
-    addUser.run('admin', '事務所 管理者', 'admin', '', hashPassword('admin1234'));
-    const sato = Number(addUser.run('sato', '佐藤 一郎', 'staff', '090-0000-0001', hashPassword('sato1234')).lastInsertRowid);
-    const takahashi = Number(addUser.run('takahashi', '高橋 健太', 'staff', '090-0000-0002', hashPassword('takahashi1234')).lastInsertRowid);
+    addUser.run('admin', '事務所 管理者', 'admin', '', hashPassword('Ichinohe-Admin-2026'));
+    const sato = Number(addUser.run('sato', '佐藤 一郎', 'staff', '090-0000-0001', hashPassword('Ichinohe-Sato-2026')).lastInsertRowid);
+    const takahashi = Number(addUser.run('takahashi', '高橋 健太', 'staff', '090-0000-0002', hashPassword('Ichinohe-Takahashi-2026')).lastInsertRowid);
 
     const addCustomer = db.prepare('INSERT INTO customers(name, kana, address, phone, lat, lng, radius_m, notes) VALUES (?,?,?,?,?,?,?,?)');
     const addTank = db.prepare('INSERT INTO tanks(customer_id, label, model, capacity) VALUES (?,?,?,?)');
@@ -49,8 +49,8 @@ function seedDemo() {
     addJob.run(c3, t3, takahashi, date, '保守点検', '');
   });
   console.log('デモデータを投入しました。');
-  console.log('  管理者  : admin / admin1234');
-  console.log('  作業員  : sato / sato1234 、 takahashi / takahashi1234');
+  console.log('  管理者  : admin / Ichinohe-Admin-2026');
+  console.log('  作業員  : sato / Ichinohe-Sato-2026 、 takahashi / Ichinohe-Takahashi-2026');
 }
 
 /**

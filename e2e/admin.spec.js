@@ -6,7 +6,7 @@ test.use({ ...devices['Desktop Chrome'], locale: 'ja-JP', timezoneId: 'Asia/Toky
 test.describe('管理画面：顧客・浄化槽・QR・作業予定', () => {
   test('顧客を地図で位置指定して登録 → 浄化槽を追加 → QRラベルが印刷画面に出る → 作業予定を登録すると作業員の本日の作業に表示される', async ({ page, context, browser }) => {
     const name = `管理E2E顧客${Date.now() % 100000}`;
-    await loginUi(page, 'admin', 'admin1234');
+    await loginUi(page, 'admin', 'Ichinohe-Admin-2026');
     await expect(page.getByRole('heading', { name: 'ダッシュボード' })).toBeVisible();
     await page.getByRole('link', { name: '顧客・浄化槽' }).click();
     await page.getByRole('button', { name: '＋ 顧客を登録' }).click();
@@ -58,13 +58,13 @@ test.describe('管理画面：顧客・浄化槽・QR・作業予定', () => {
     // 作業員の画面に出る
     const staffCtx = await browser.newContext({ ...devices['Pixel 7'], locale: 'ja-JP', geolocation: { latitude: 40.2, longitude: 141.29, accuracy: 10 }, permissions: ['geolocation'] });
     const staffPage = await staffCtx.newPage();
-    await loginUi(staffPage, 'sato', 'sato1234');
+    await loginUi(staffPage, 'sato', 'Ichinohe-Sato-2026');
     await expect(staffPage.locator('#jobList')).toContainText(name);
     await staffCtx.close();
   });
 
   test('浄化槽を選ばずに「保守点検」を登録しようとすると、QR対象の浄化槽が必要とエラーになる', async ({ page }) => {
-    await loginUi(page, 'admin', 'admin1234');
+    await loginUi(page, 'admin', 'Ichinohe-Admin-2026');
     await page.getByRole('link', { name: '作業予定' }).click();
     await page.getByRole('button', { name: '＋ 作業を登録' }).click();
     const dialog = page.getByRole('dialog');
@@ -79,7 +79,7 @@ test.describe('管理画面：顧客・浄化槽・QR・作業予定', () => {
 
   test('従業員を登録すると、そのIDでログインして作業員画面を使える', async ({ page, browser }) => {
     const login = `new${Date.now() % 100000}`;
-    await loginUi(page, 'admin', 'admin1234');
+    await loginUi(page, 'admin', 'Ichinohe-Admin-2026');
     await page.getByRole('link', { name: '従業員' }).click();
     await page.getByRole('button', { name: '＋ 従業員を登録' }).click();
     const dialog = page.getByRole('dialog');
@@ -104,7 +104,7 @@ test.describe('管理画面：現場での顧客登録・ログインの無効�
   test('顧客登録で「現在地を浄化槽の位置にする」を押すと、管理者の現在地が位置として入る', async ({ browser }) => {
     const ctx = await browser.newContext({ ...devices['Desktop Chrome'], locale: 'ja-JP', geolocation: { latitude: 39.7036, longitude: 141.1527, accuracy: 12 }, permissions: ['geolocation'] });
     const page = await ctx.newPage();
-    await loginUi(page, 'admin', 'admin1234');
+    await loginUi(page, 'admin', 'Ichinohe-Admin-2026');
     await page.getByRole('link', { name: '顧客・浄化槽' }).click();
     await page.getByRole('button', { name: '＋ 顧客を登録' }).click();
     await page.getByRole('button', { name: '現在地を浄化槽の位置にする' }).click();

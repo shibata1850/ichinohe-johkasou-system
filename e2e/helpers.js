@@ -15,7 +15,7 @@ const todayJst = () => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo'
 /** 管理者としてログイン済みの API クライアント */
 async function adminApi() {
   const api = await pwRequest.newContext({ baseURL: BASE });
-  const r = await api.post('/api/login', { data: { login_id: 'admin', password: 'admin1234' } });
+  const r = await api.post('/api/login', { data: { login_id: 'admin', password: 'Ichinohe-Admin-2026' } });
   if (!r.ok()) throw new Error('admin login failed');
   return api;
 }
