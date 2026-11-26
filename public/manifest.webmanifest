@@ -1,0 +1,12 @@
+{
+  "name": "一戸浄化槽 作業管理",
+  "short_name": "作業管理",
+  "start_url": "/staff",
+  "display": "standalone",
+  "background_color": "#f3f6f8",
+  "theme_color": "#0b6e8a",
+  "lang": "ja",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b6e8a">
+  <title>管理画面 一戸浄化槽</title>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">一戸浄化槽 作業管理｜管理画面</div>
+    <span id="me" class="small"></span>
+    <button type="button" id="logoutBtn">ログアウト</button>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="管理メニュー">
+    <a href="#dashboard">ダッシュボード</a>
+    <a href="#jobs">作業予定</a>
+    <a href="#customers">顧客・浄化槽</a>
+    <a href="#reports">作業報告</a>
+    <a href="#attendance">勤怠・アルコール</a>
+    <a href="#users">従業員</a>
+    <a href="#settings">設定</a>
+  </nav>
+  <main class="wrap-wide" id="view"><p class="muted">読み込み中…</p></main>
+
+  <dialog id="dlg">
+    <form method="dialog" id="dlgForm" novalidate>
+      <div class="dlg-head"><h2 id="dlgTitle"></h2><button type="button" class="btn btn-sm" id="dlgClose" aria-label="閉じる">×</button></div>
+      <div class="dlg-body" id="dlgBody"></div>
+      <div class="dlg-foot" id="dlgFoot"></div>
+    </form>
+  </dialog>
+
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/shared/checklists.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

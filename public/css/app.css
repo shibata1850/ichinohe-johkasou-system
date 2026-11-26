@@ -1,0 +1,177 @@
+:root {
+  --bg: #f3f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef3f6;
+  --text: #17232c;
+  --muted: #5b6b77;
+  --line: #d7e0e6;
+  --brand: #0b6e8a;
+  --brand-ink: #ffffff;
+  --brand-soft: #e1f1f6;
+  --ok: #1f7a46;
+  --ok-soft: #e3f4ea;
+  --warn: #9a6200;
+  --warn-soft: #fff4dc;
+  --danger: #b42318;
+  --danger-soft: #fde8e6;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(16, 35, 48, .06), 0 2px 8px rgba(16, 35, 48, .06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171c; --surface: #172229; --surface-2: #1e2c35; --text: #e6eef2; --muted: #9db0bc; --line: #2b3d48;
+    --brand: #37a7c7; --brand-ink: #04202a; --brand-soft: #123441;
+    --ok: #4cc283; --ok-soft: #12321f; --warn: #f0b545; --warn-soft: #362a10; --danger: #ff7a6e; --danger-soft: #3d1714;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  font-size: 16px; line-height: 1.6; -webkit-text-size-adjust: 100%;
+}
+a { color: var(--brand); }
+h1, h2, h3 { line-height: 1.3; margin: 0 0 .5em; }
+h1 { font-size: 1.25rem; }
+h2 { font-size: 1.1rem; }
+h3 { font-size: 1rem; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.num { font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
+
+/* ---------- レイアウト ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; background: var(--brand); color: var(--brand-ink);
+}
+.topbar .title { font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar button { background: transparent; color: inherit; border: 1px solid currentColor; border-radius: 8px; padding: 4px 10px; font-size: .85rem; cursor: pointer; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+.wrap-wide { max-width: 1280px; margin: 0 auto; padding: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.row > .grow { flex: 1; min-width: 0; }
+.grid { display: grid; gap: 16px; }
+@media (min-width: 900px) { .grid-2 { grid-template-columns: 1fr 1fr; } .grid-3-1 { grid-template-columns: 2fr 1fr; } }
+.stack > * + * { margin-top: 12px; }
+
+/* ---------- ボタン ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; text-decoration: none;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.btn-ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn-lg { min-height: 60px; font-size: 1.1rem; width: 100%; border-radius: 14px; }
+.btn-sm { min-height: 34px; padding: 4px 10px; font-size: .85rem; }
+.btn-link { border: none; background: none; color: var(--brand); padding: 0; min-height: 0; font-weight: 600; cursor: pointer; }
+
+/* ---------- フォーム ---------- */
+label.field { display: block; margin-bottom: 12px; }
+label.field > span { display: block; font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
+input, select, textarea {
+  width: 100%; font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px;
+}
+textarea { min-height: 88px; }
+input:focus, select:focus, textarea:focus, .btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 40%, transparent); outline-offset: 1px; }
+.form-grid { display: grid; gap: 0 16px; }
+@media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+.form-grid .full { grid-column: 1 / -1; }
+
+/* ---------- バッジ・通知 ---------- */
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--warn-soft); color: var(--warn); }
+.badge.danger { background: var(--danger-soft); color: var(--danger); }
+.badge.brand { background: var(--brand-soft); color: var(--brand); }
+.notice { border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; border: 1px solid transparent; }
+.notice.ok { background: var(--ok-soft); color: var(--ok); border-color: color-mix(in srgb, var(--ok) 30%, transparent); }
+.notice.warn { background: var(--warn-soft); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+.notice.danger { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+.notice.info { background: var(--brand-soft); color: var(--brand); }
+
+#toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; width: min(92vw, 480px); pointer-events: none; }
+.toast { padding: 12px 16px; border-radius: 10px; color: #fff; background: #26343d; box-shadow: var(--shadow); font-weight: 600; }
+.toast.ok { background: var(--ok); } .toast.danger { background: var(--danger); }
+
+/* ---------- 作業員：ステップ ---------- */
+.steps { list-style: none; padding: 0; margin: 0; }
+.step { display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.step:last-child { border-bottom: none; }
+.step-no { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--surface-2); color: var(--muted); }
+.step.done .step-no { background: var(--ok); color: #fff; }
+.step.active .step-no { background: var(--brand); color: var(--brand-ink); }
+.step.locked { opacity: .55; }
+.job-card { display: block; text-decoration: none; color: inherit; }
+.job-card:hover { border-color: var(--brand); }
+
+.status-big { text-align: center; padding: 24px 16px; border-radius: var(--radius); }
+.status-big .value { font-size: 2.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.status-big.ok { background: var(--ok-soft); color: var(--ok); }
+.status-big.danger { background: var(--danger-soft); color: var(--danger); }
+
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.photo-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
+
+/* QRスキャナ */
+.scanner { position: fixed; inset: 0; background: #000; z-index: 200; display: flex; flex-direction: column; }
+.scanner video { flex: 1; width: 100%; min-height: 0; object-fit: cover; }
+.scanner .frame { position: absolute; left: 50%; top: 42%; width: min(70vw, 300px); aspect-ratio: 1; transform: translate(-50%, -50%); border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, .35); pointer-events: none; }
+.scanner .bar { padding: 16px; background: #000; color: #fff; text-align: center; }
+
+/* ---------- 管理画面 ---------- */
+.tabs { display: flex; gap: 4px; overflow-x: auto; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.tabs a { padding: 12px 14px; text-decoration: none; color: var(--muted); font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; }
+.tabs a.active { color: var(--brand); border-bottom-color: var(--brand); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .8rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--surface-2); }
+.map { height: 420px; border-radius: var(--radius); border: 1px solid var(--line); z-index: 0; }
+.map-sm { height: 300px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.kpi .label { font-size: .8rem; color: var(--muted); font-weight: 600; }
+.kpi .value { font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.kpi.danger .value { color: var(--danger); }
+dialog { border: none; border-radius: 14px; padding: 0; width: min(94vw, 720px); background: var(--surface); color: var(--text); box-shadow: 0 10px 40px rgba(0, 0, 0, .3); }
+dialog::backdrop { background: rgba(10, 20, 26, .5); }
+dialog .dlg-head { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+dialog .dlg-head h2 { margin: 0; flex: 1; }
+dialog .dlg-body { padding: 16px; max-height: 72vh; overflow: auto; }
+dialog .dlg-foot { display: flex; gap: 8px; justify-content: flex-end; padding: 12px 16px; border-top: 1px solid var(--line); }
+.alert-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.alert-item:last-child { border-bottom: none; }
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li { padding: 6px 0 6px 18px; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: 4px; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+
+/* ---------- ログイン ---------- */
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+.login-card { width: min(100%, 400px); }
+.brand-mark { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.brand-mark svg { width: 40px; height: 40px; flex: none; }
+
+/* ---------- 印刷（QRラベル） ---------- */
+.qr-labels { display: grid; grid-template-columns: repeat(auto-fill, minmax(80mm, 1fr)); gap: 6mm; }
+.qr-label { border: 1px dashed #888; border-radius: 4mm; padding: 5mm; display: grid; grid-template-columns: 34mm 1fr; gap: 4mm; align-items: center; background: #fff; color: #000; break-inside: avoid; }
+.qr-label svg { width: 34mm; height: 34mm; }
+.qr-label .t1 { font-weight: 800; font-size: 11pt; }
+.qr-label .t2 { font-size: 9pt; }
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  .wrap-wide { padding: 0; max-width: none; }
+}

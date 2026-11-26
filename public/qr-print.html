@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QRラベル印刷</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <main class="wrap-wide">
+    <div class="no-print card">
+      <h1>浄化槽QRラベル印刷</h1>
+      <p class="small">耐水ラベル用紙に印刷し、<b>浄化槽の点検口の蓋の「裏側」</b>に貼ってください。蓋を開けないと読み取れない位置に貼ることで、点検せずに報告することを防ぎます。</p>
+      <p class="small muted">QRを再発行した場合は、古いラベルを必ずはがしてください（古いQRは読み取ってもエラーになります）。</p>
+      <button class="btn btn-primary" id="printBtn">印刷する</button>
+    </div>
+    <div class="qr-labels" id="labels"><p class="muted">読み込み中…</p></div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script src="/js/qr-print.js"></script>
+</body>
+</html>

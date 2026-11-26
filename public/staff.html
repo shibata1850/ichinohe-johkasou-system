@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b6e8a">
+  <title>作業員 一戸浄化槽</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+</head>
+<body>
+  <header class="topbar">
+    <button type="button" id="backBtn" class="hidden" aria-label="戻る">← 戻る</button>
+    <div class="title" id="topTitle">一戸浄化槽 作業管理</div>
+    <button type="button" id="logoutBtn">ログアウト</button>
+  </header>
+  <div id="geoBanner" class="notice warn hidden" style="margin:0;border-radius:0" role="alert"></div>
+  <main class="wrap" id="view" aria-live="polite">
+    <p class="muted">読み込み中…</p>
+  </main>
+
+  <!-- QRスキャナ（全画面） -->
+  <div class="scanner hidden" id="scanner" role="dialog" aria-label="QRコード読み取り">
+    <video id="scanVideo" playsinline muted></video>
+    <div class="frame"></div>
+    <div class="bar">
+      <p style="margin:0 0 10px">蓋の裏のQRコードを枠に合わせてください</p>
+      <p id="scanMsg" style="margin:0 0 10px;min-height:1.6em"></p>
+      <button type="button" class="btn" id="scanCancel">やめる</button>
+    </div>
+  </div>
+  <canvas id="scanCanvas" class="hidden"></canvas>
+
+  <script src="/vendor/jsQR.js"></script>
+  <script src="/shared/checklists.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/staff.js"></script>
+</body>
+</html>
