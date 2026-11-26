@@ -259,7 +259,7 @@
         <label class="field"><span>顧客名</span><input id="cName" value="${esc(c.name)}"></label>
         <label class="field"><span>ふりがな</span><input id="cKana" value="${esc(c.kana || '')}"></label>
         <label class="field full"><span>住所</span>
-          <div class="row"><input id="cAddress" class="grow" value="${esc(c.address || '')}" style="flex:1"><button type="button" class="btn btn-sm" id="geocode">住所から地図を検索</button></div></label>
+          <div class="row"><input id="cAddress" class="grow" value="${esc(c.address || '')}" style="flex:1"><button type="button" class="btn btn-sm" id="geocode">住所から地図を検索</button><button type="button" class="btn btn-sm" id="useHere">現在地を浄化槽の位置にする</button></div></label>
         <label class="field"><span>電話番号</span><input id="cPhone" value="${esc(c.phone || '')}"></label>
         <label class="field"><span>許容範囲（m）<small class="muted">この範囲内でないと到着・QR・報告ができません</small></span><input id="cRadius" type="number" min="20" max="1000" step="10" value="${c.radius_m}"></label>
         <div class="full"><p class="small" style="margin:0 0 4px"><b>浄化槽の位置</b>：地図をクリック（またはピンをドラッグ）して、浄化槽の場所を正確に指定してください。</p>
@@ -328,6 +328,15 @@
         place(lat, lng);
         toast('おおよその位置を設定しました。浄化槽の正確な位置にピンを動かしてください。');
       } catch (_) { toast('住所検索に失敗しました。地図をクリックして指定してください。', 'danger'); }
+    };
+    // 現場で登録するとき用：今いる場所をそのまま浄化槽の位置にする
+    document.getElementById('useHere').onclick = async () => {
+      try {
+        const p = await window.App.getPosition();
+        map.setView([p.lat, p.lng], 18);
+        place(p.lat, p.lng);
+        toast(`現在地を設定しました（誤差 約${Math.round(p.acc)}m）`, 'ok');
+      } catch (e) { toast(e.message, 'danger'); }
     };
     if (!id) return;
     document.getElementById('addTank').onclick = async () => {

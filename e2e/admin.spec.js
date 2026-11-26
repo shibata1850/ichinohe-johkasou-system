@@ -99,3 +99,31 @@ test.describe('管理画面：顧客・浄化槽・QR・作業予定', () => {
     await ctx.close();
   });
 });
+
+test.describe('管理画面：現場での顧客登録・ログインの無効化', () => {
+  test('顧客登録で「現在地を浄化槽の位置にする」を押すと、管理者の現在地が位置として入る', async ({ browser }) => {
+    const ctx = await browser.newContext({ ...devices['Desktop Chrome'], locale: 'ja-JP', geolocation: { latitude: 39.7036, longitude: 141.1527, accuracy: 12 }, permissions: ['geolocation'] });
+    const page = await ctx.newPage();
+    await loginUi(page, 'admin', 'admin1234');
+    await page.getByRole('link', { name: '顧客・浄化槽' }).click();
+    await page.getByRole('button', { name: '＋ 顧客を登録' }).click();
+    await page.getByRole('button', { name: '現在地を浄化槽の位置にする' }).click();
+    await expect(page.locator('#cPosText')).toHaveText('緯度 39.703600 / 経度 141.152700');
+    await expect(page.getByText('現在地を設定しました（誤差 約12m）')).toBeVisible();
+    await ctx.close();
+  });
+
+  test('管理者が作業員のパスワードを変更すると、その作業員のログイン中の画面はログアウト扱いになる', async ({ browser }) => {
+    const { adminApi, createScenario, ok } = require('./helpers');
+    const api = await adminApi();
+    const sc = await createScenario(api);
+    const ctx = await browser.newContext({ ...devices['Pixel 7'], locale: 'ja-JP' });
+    const p = await ctx.newPage();
+    await loginUi(p, sc.login, sc.password);
+    await expect(p).toHaveURL(/\/staff$/);
+    expect((await p.request.get('/api/me')).status()).toBe(200);
+    await ok(api.put(`/api/admin/users/${sc.userId}`, { data: { login_id: sc.login, name: 'x', role: 'staff', password: 'changed-pass-1' } }));
+    expect((await p.request.get('/api/me')).status()).toBe(401);
+    await ctx.close();
+  });
+});

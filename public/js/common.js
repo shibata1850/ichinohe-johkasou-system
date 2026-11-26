@@ -69,7 +69,7 @@
   }
 
   /** 写真を長辺 maxSize px の JPEG に縮小して dataURL で返す（通信量を抑える） */
-  function resizeImage(file, maxSize = 1280, quality = 0.8) {
+  function resizeImage(file, maxSize = 1200, quality = 0.72) {
     return new Promise((resolve, reject) => {
       const url = URL.createObjectURL(file);
       const img = new Image();

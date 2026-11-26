@@ -25,7 +25,7 @@ function ensureInitialAdmin() {
 function seedDemo() {
   const date = todayJst();
   tx(() => {
-    for (const t of ['photos', 'reports', 'jobs', 'tanks', 'customers', 'locations', 'alerts', 'device_readings', 'attendance', 'alcohol_checks', 'sessions', 'users']) {
+    for (const t of ['photos', 'reports', 'jobs', 'tanks', 'customers', 'locations', 'alerts', 'device_readings', 'attendance', 'alcohol_checks', 'users']) {
       db.exec(`DELETE FROM ${t}`);
     }
     db.exec("DELETE FROM sqlite_sequence");
@@ -53,6 +53,16 @@ function seedDemo() {
   console.log('  作業員  : sato / sato1234 、 takahashi / takahashi1234');
 }
 
+/**
+ * デモ公開用：DBが空なら（＝サーバ起動直後）デモデータを入れる。
+ * すぐ試せるよう最低滞在時間は0分にする。
+ */
+function initDemoIfEmpty() {
+  if (db.prepare('SELECT COUNT(*) AS n FROM users').get().n > 0) return;
+  seedDemo();
+  db.prepare("UPDATE settings SET value = '0' WHERE key = 'min_stay_minutes'").run();
+}
+
 if (require.main === module) seedDemo();
 
-module.exports = { ensureInitialAdmin, seedDemo };
+module.exports = { ensureInitialAdmin, seedDemo, initDemoIfEmpty };

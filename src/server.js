@@ -9,7 +9,7 @@ const QRCode = require('qrcode');
 
 const { db, DATA_DIR, getSettings, setSetting, tx } = require('./db');
 const {
-  hashPassword, verifyPassword, makeTankQrPayload, parseTankQrPayload,
+  SECRET, hashPassword, verifyPassword, makeTankQrPayload, parseTankQrPayload,
   distanceM, parsePosition, nowIso, todayJst, fmtJst, savePhotoDataUrl, httpError,
 } = require('./util');
 const CHECKLISTS = require('../public/shared/checklists.js');
@@ -20,7 +20,7 @@ if (!getSettings().device_api_key) setSetting('device_api_key', crypto.randomByt
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
-app.use(express.json({ limit: '25mb' }));
+app.use(express.json({ limit: '4mb' })); // Vercel の上限（4.5MB）に合わせる
 
 // ---------- セキュリティヘッダ ----------
 app.use((req, res, next) => {
@@ -54,13 +54,26 @@ function setSessionCookie(req, res, token, maxAgeSec) {
   const secure = req.secure ? '; Secure' : '';
   res.setHeader('Set-Cookie', `sid=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAgeSec}${secure}`);
 }
+// セッションは署名付きトークン「ユーザーID.有効期限.署名」をCookieに保存する（サーバ側に状態を持たない）。
+// 署名にはパスワードハッシュを含めるため、パスワードを変更すると既存のログインは無効になる。
+function sessionSig(userId, exp, passwordHash) {
+  return crypto.createHmac('sha256', SECRET).update(`session:${userId}.${exp}.${passwordHash}`).digest('base64url');
+}
+function makeSessionToken(user) {
+  const exp = Date.now() + SESSION_DAYS * 86400 * 1000;
+  return `${user.id}.${exp}.${sessionSig(user.id, exp, user.password_hash)}`;
+}
 app.use((req, _res, next) => {
   const token = parseCookies(req.headers.cookie).sid;
-  if (token) {
-    const row = db.prepare(`
-      SELECT u.id, u.login_id, u.name, u.role FROM sessions s JOIN users u ON u.id = s.user_id
-      WHERE s.token = ? AND s.expires_at > ? AND u.active = 1`).get(token, Date.now());
-    if (row) { req.user = row; req.sessionToken = token; }
+  const m = /^(\d+)\.(\d+)\.([A-Za-z0-9_-]{43})$/.exec(token || '');
+  if (m && Number(m[2]) > Date.now()) {
+    const user = db.prepare('SELECT id, login_id, name, role, password_hash FROM users WHERE id = ? AND active = 1').get(Number(m[1]));
+    if (user) {
+      const expected = sessionSig(user.id, m[2], user.password_hash);
+      if (crypto.timingSafeEqual(Buffer.from(m[3]), Buffer.from(expected))) {
+        req.user = { id: user.id, login_id: user.login_id, name: user.name, role: user.role };
+      }
+    }
   }
   next();
 });
@@ -106,19 +119,16 @@ app.post('/api/login', wrap((req, res) => {
     throw httpError(401, 'IDまたはパスワードが違います');
   }
   loginFailures.delete(key);
-  const token = crypto.randomBytes(32).toString('base64url');
-  db.prepare('INSERT INTO sessions(token, user_id, expires_at) VALUES (?,?,?)')
-    .run(token, user.id, Date.now() + SESSION_DAYS * 86400 * 1000);
-  db.prepare('DELETE FROM sessions WHERE expires_at < ?').run(Date.now());
-  setSessionCookie(req, res, token, SESSION_DAYS * 86400);
+  setSessionCookie(req, res, makeSessionToken(user), SESSION_DAYS * 86400);
   res.json({ id: user.id, login_id: user.login_id, name: user.name, role: user.role });
 }));
 app.post('/api/logout', wrap((req, res) => {
-  if (req.sessionToken) db.prepare('DELETE FROM sessions WHERE token = ?').run(req.sessionToken);
   setSessionCookie(req, res, '', 0);
   res.json({ ok: true });
 }));
 app.get('/api/me', requireLogin, (req, res) => res.json(req.user));
+// 画面側の表示切替用（デモ版かどうか）
+app.get('/api/config', (_req, res) => res.json({ demo: process.env.DEMO_MODE === '1' }));
 
 // ---------- 共通：ジオフェンス判定 ----------
 function checkGeofence(customer, pos, settings) {
@@ -514,7 +524,6 @@ admin.put('/users/:id', wrap((req, res) => {
   if (id === req.user.id && (active === 0 || v.role !== 'admin')) throw httpError(400, '自分自身の管理者権限・有効状態は変更できません');
   db.prepare('UPDATE users SET login_id = ?, name = ?, role = ?, phone = ?, active = ? WHERE id = ?').run(v.loginId, v.name, v.role, v.phone, active, id);
   if (req.body.password) db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(req.body.password), id);
-  if (active === 0 || req.body.password) db.prepare('DELETE FROM sessions WHERE user_id = ?').run(id);
   res.json({ ok: true });
 }));
 
@@ -778,8 +787,8 @@ function start() {
   }
 }
 if (require.main === module) {
-  const { ensureInitialAdmin } = require('./seed');
-  ensureInitialAdmin();
+  const { ensureInitialAdmin, initDemoIfEmpty } = require('./seed');
+  if (process.env.DEMO_MODE === '1') initDemoIfEmpty(); else ensureInitialAdmin();
   start();
 }
 

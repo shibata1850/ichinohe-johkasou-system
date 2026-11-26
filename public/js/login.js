@@ -5,6 +5,10 @@
   const next = new URLSearchParams(location.search).get('next');
   const homeFor = (u) => (u.role === 'admin' ? '/admin' : '/staff');
 
+  fetch('/api/config').then((r) => r.json()).then((c) => {
+    if (c.demo) document.getElementById('demoBox').classList.remove('hidden');
+  }).catch(() => {});
+
   // ログイン済みならそのまま移動
   fetch('/api/me', { credentials: 'same-origin' }).then((r) => (r.ok ? r.json() : null)).then((u) => {
     if (u) location.replace(next && next.startsWith('/') ? next : homeFor(u));
